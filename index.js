@@ -1,7 +1,7 @@
 'use strict';
 
 const store = {
-  items:[],
+  items:[{name:'fish',checked:false,isEditing:false}],
   hideChecked:false,
   searchTerm:false
 };
@@ -21,9 +21,14 @@ const handleNewItemAdded = () => {
 //3. Regenerate html for Dom
 //4. Render Html to the DOM'
   $('#js-shopping-list-form').on('submit',(event) => {
-
-    event.preventDefault();
-    addItem();
+    if ( $('.js-shopping-list-entry').val()==="") {
+      event.preventDefault();
+      $('.js-shopping-list-entry').attr('placeholder','You must enter an Item');
+    } else {
+      event.preventDefault();
+      addItem();
+      $('.js-shopping-list-entry').attr('placeholder','e.g., broccoli');
+    }
   });
 };
 
