@@ -37,6 +37,7 @@ const handleTitleEdit = () => {
     let index = $(event.target).closest('li').attr('data-item-index');
     store.items[index].isEditing = !store.items[index].isEditing;
     renderList();
+    $('.edit-item-name-input').focus();
   });
 };
 
@@ -85,7 +86,7 @@ const handleItemChecked = () => {
 
 const deleteItem = () => {
   let index = $(event.target).closest('li').attr('data-item-index');
-  delete store.items[index];
+  store.items.splice(index,1);
   renderList();
   // console.log('deleted');
 };
@@ -103,8 +104,17 @@ const handleItemDeleted = () => {
 };
 
 
+let handleShowButton = () => {
+  $('.search-input').css('display','none');
+  $('.search-dropdown').on('click', (event) => {
+    event.preventDefault();
+    $('.search-input').slideToggle();
+    $('.search-dropdown').removeClass('search-dropdown');
+  });
+};
+
 let generateEditTemplate = (item) => {
-  if (item.isEditing === true) {
+  if (item.isEditing) {
     return `<form class='edit-item-name-form'>
       <input class='edit-item-name-input' placeholder='edit title...'>
       <button type='submit' class='accept-edit'>Ok</button>
@@ -166,7 +176,19 @@ const initiateQuiz = () => {
   handleTitleEdit();
   handleAcceptEdit();
   handleShowCheckedItemsToggle();
+  handleShowButton();
 };
 
 
 $(initiateQuiz());
+
+
+/**
+ * In order to implement search for item by name:
+ * Set an event listener on search input form, for 'submit'
+ * On submit, store's 'isSearching' should be set to true
+ * there should be a separate function for generating the dom data that will filter a different array
+ * this array will be a result of a .filter function which $('')'s the search field's input and iterates through each item instance in store, filtering
+ * out anything whose item name does not contain the string specified.
+ * We should then make a link or button to reset the is Searching to false so that the user van view all items again.
+ */
