@@ -3,7 +3,7 @@
 const store = {
   items:[],
   hideChecked:false,
-  searchTerm:false
+  isSearching:false
 };
 
 let addItem = () => {
@@ -46,8 +46,6 @@ const handleAcceptEdit = () => {
     event.preventDefault();
     let index = $(event.target).closest('li').attr('data-item-index');
     let userInput = $('.edit-item-name-input').val();
-    // console.log(userInput);
-    console.log(store.items[index]);
     store.items[index].name = userInput;
     store.items[index].isEditing = !store.items[index].isEditing;
     renderList();
@@ -55,9 +53,19 @@ const handleAcceptEdit = () => {
 };
 
 
+const handleCancelEdit = () => {
+  $('.js-shopping-list').on('click','.cancel-edit',(event) => {
+    event.preventDefault();
+    let index = $(event.target).closest('li').attr('data-item-index');
+    store.items[index].isEditing = !store.items[index].isEditing;
+    renderList();
+  });
+};
+
+
+
 const handleShowCheckedItemsToggle = () => {
   $('.toggle-show-checked').on('click',(event) => {
-    console.log('run');
     event.preventDefault();
     store.hideChecked = !store.hideChecked;
     renderList();
@@ -88,7 +96,6 @@ const deleteItem = () => {
   let index = $(event.target).closest('li').attr('data-item-index');
   store.items.splice(index,1);
   renderList();
-  // console.log('deleted');
 };
 const handleItemDeleted = () => {
 //1. Get html index attribute from item that was clicked
@@ -97,7 +104,6 @@ const handleItemDeleted = () => {
 //3. Render Html to the DOM
   $('.js-shopping-list').on('click','.js-item-delete', (event) => {
     event.preventDefault();
-    // console.log('got here');
     deleteItem();
 
   });
@@ -109,7 +115,6 @@ let handleShowButton = () => {
   $('.search-dropdown').on('click', (event) => {
     event.preventDefault();
     $('.search-input').slideToggle();
-    $('.search-dropdown').removeClass('search-dropdown');
   });
 };
 
@@ -118,7 +123,7 @@ let generateEditTemplate = (item) => {
     return `<form class='edit-item-name-form'>
       <input class='edit-item-name-input' placeholder='edit title...'>
       <button type='submit' class='accept-edit'>Ok</button>
-      <button>Cancel</button>
+      <button class='cancel-edit'>Cancel</button>
     </form>
     `; 
   } else {
@@ -127,6 +132,16 @@ let generateEditTemplate = (item) => {
     </span>`;
   }
 };
+
+let handleSearchItem = () => {
+  $('.search-input').on('keydown',(event) => {
+    if (event.key === 'Enter') {
+    store.isSearching = true;
+    renderList();
+    }
+  });
+};
+
 
 const checkedItemsClassGenerator = (item) => {
   let cssClass;
@@ -162,9 +177,41 @@ const createListString = (arrayOfItems) => {
   return storeLiArr.join('');
 };
 
+const createSearchListString = (arrayOfItems) => {
+    let storeLiArr = [];
+    let userSearchInput = $('.search-input').val().toLowerCase();
+    $('.search-input').val('')
+    arrayOfItems.forEach((item,index)=> {
+      let itemName = item.name.toLowerCase();
+      if (itemName.includes(userSearchInput)) {
+      storeLiArr.push(`
+        <li class='js-item-index-element ${checkedItemsClassGenerator(item)}' data-item-index="${index}">
+          ${generateEditTemplate(item)} 
+          <div class="shopping-item-controls">
+            <button class="shopping-item-toggle js-item-toggle">
+              <span class="button-label">check</span>
+            </button>
+            <button class="shopping-item-delete js-item-delete">
+              <span class="button-label">delete</span>
+            </button>
+          </div>
+        </li>
+      `);
+      }
+    });
+    return storeLiArr.join('');
+  };
+
+
+
 const renderList = () => {
+  if (store.isSearching === false) {
   const domData = createListString(store.items);
   $('.js-shopping-list').html(domData);
+  } else {
+    const domData = createSearchListString(store.items);
+    $('.js-shopping-list').html(domData);
+  }
 };
 
 
@@ -177,6 +224,8 @@ const initiateQuiz = () => {
   handleAcceptEdit();
   handleShowCheckedItemsToggle();
   handleShowButton();
+  handleSearchItem();
+  handleCancelEdit();
 };
 
 
