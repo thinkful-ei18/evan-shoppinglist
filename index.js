@@ -158,9 +158,9 @@ const createListString = (arrayOfItems) => {
 //2. Iterate over each member of the array, pushing an 'li' with traits
 // based on whether they are checked or not
 //3. JOIN and return the initially declared array, which now has all of the 'li's pushed to it
-  let storeLiArr = [];
-  arrayOfItems.forEach((item,index)=> {
-    storeLiArr.push(`
+  // let storeLiArr = [];
+  return arrayOfItems.map((item,index)=> {
+    return `
       <li class='js-item-index-element ${checkedItemsClassGenerator(item)}' data-item-index="${index}">
         ${generateEditTemplate(item)} 
         <div class="shopping-item-controls">
@@ -171,10 +171,8 @@ const createListString = (arrayOfItems) => {
             <span class="button-label">delete</span>
           </button>
         </div>
-      </li>
-    `);
+      </li>`;
   });
-  return storeLiArr.join('');
 };
 
 const createSearchListString = (arrayOfItems) => {
