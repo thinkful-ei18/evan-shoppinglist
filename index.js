@@ -136,8 +136,8 @@ let generateEditTemplate = (item) => {
 let handleSearchItem = () => {
   $('.search-input').on('keydown',(event) => {
     if (event.key === 'Enter') {
-    store.isSearching = true;
-    renderList();
+      store.isSearching = true;
+      renderList();
     }
   });
 };
@@ -178,12 +178,12 @@ const createListString = (arrayOfItems) => {
 };
 
 const createSearchListString = (arrayOfItems) => {
-    let storeLiArr = [];
-    let userSearchInput = $('.search-input').val().toLowerCase();
-    $('.search-input').val('')
-    arrayOfItems.forEach((item,index)=> {
-      let itemName = item.name.toLowerCase();
-      if (itemName.includes(userSearchInput)) {
+  let storeLiArr = [];
+  let userSearchInput = $('.search-input').val().toLowerCase();
+  $('.search-input').val('')
+  arrayOfItems.forEach((item,index)=> {
+    let itemName = item.name.toLowerCase();
+    if (itemName.includes(userSearchInput)) {
       storeLiArr.push(`
         <li class='js-item-index-element ${checkedItemsClassGenerator(item)}' data-item-index="${index}">
           ${generateEditTemplate(item)} 
@@ -197,17 +197,17 @@ const createSearchListString = (arrayOfItems) => {
           </div>
         </li>
       `);
-      }
-    });
-    return storeLiArr.join('');
-  };
+    }
+  });
+  return storeLiArr.join('');
+};
 
 
 
 const renderList = () => {
   if (store.isSearching === false) {
-  const domData = createListString(store.items);
-  $('.js-shopping-list').html(domData);
+    const domData = createListString(store.items);
+    $('.js-shopping-list').html(domData);
   } else {
     const domData = createSearchListString(store.items);
     $('.js-shopping-list').html(domData);
