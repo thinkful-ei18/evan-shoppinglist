@@ -176,14 +176,12 @@ const createListString = (arrayOfItems) => {
 };
 
 const createSearchListString = (arrayOfItems) => {
-  let storeLiArr = [];
   let userSearchInput = $('.search-input').val().toLowerCase();
-  $('.search-input').val('')
-  arrayOfItems.forEach((item,index)=> {
+  $('.search-input').val('');
+  return arrayOfItems.map((item,index) => {
     let itemName = item.name.toLowerCase();
     if (itemName.includes(userSearchInput)) {
-      storeLiArr.push(`
-        <li class='js-item-index-element ${checkedItemsClassGenerator(item)}' data-item-index="${index}">
+      return `<li class='js-item-index-element ${checkedItemsClassGenerator(item)}' data-item-index="${index}">
           ${generateEditTemplate(item)} 
           <div class="shopping-item-controls">
             <button class="shopping-item-toggle js-item-toggle">
@@ -194,10 +192,9 @@ const createSearchListString = (arrayOfItems) => {
             </button>
           </div>
         </li>
-      `);
+      `;
     }
   });
-  return storeLiArr.join('');
 };
 
 
